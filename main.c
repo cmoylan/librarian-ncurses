@@ -1,17 +1,9 @@
 #include <stdio.h>
-#include <ncurses.h>
 #include <curl/curl.h>
+#include "window.c"
 
-void ui(void)
-{
-  initscr();
-  printw("Hello World!!!");
-  refresh();
-  getch();
-  endwin();
-}
 
-int main(int argc, char *argv[])
+void query_server(void)
 {
   CURL *curl;
   CURLcode res;
@@ -23,6 +15,15 @@ int main(int argc, char *argv[])
 
     curl_easy_cleanup(curl);
   }
+}
+
+/** main
+ *
+ *  It all starts here.
+ */
+int main(int argc, char *argv[])
+{
+  query_server();
 
   return 0;
 }
