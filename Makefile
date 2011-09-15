@@ -9,12 +9,16 @@ LDLIBS = -lcurl
 # INCLUDE = ...
 # SOURCES = ...
 # OUT = ...
+FILES = main
 
 
-all: main
+all: $(FILES)
 
 clean:
 	rm -rf ./main
+
+check:
+	valgrind ./$(FILES)
 
 
 # Always use the 'clean' target defined in this file.
