@@ -19,3 +19,8 @@
 ## check ##
 - figure out how to include it
 - actually write some unit tests
+
+# Workflow #
+- look for stored data
+- fetch books, bookshelves, checkouts
+- write to a file somewhere
