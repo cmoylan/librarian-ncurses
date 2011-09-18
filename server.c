@@ -1,10 +1,12 @@
+#include <string.h>
 #include <curl/curl.h>
 
 
-char LIBRARIAN_URL[] = "http://localhost:8080";
-//char VALID_TYPES[] = {"a", "b", "c"};
+char *LIBRARIAN_URL = "http://localhost:8080";
+char *EXTENSION = ".xml";
 
-void query_server(void);
+void query_server(char *path);
+size_t process_results( char *ptr, size_t size, size_t nmemb, void *userdata)
 
 
 // TODO:
@@ -14,39 +16,55 @@ void query_server(void);
 
 void fetch(char *data_type)
 {
-  printf("%s", data_type);
-  //query_server();
-}
+  // TODO: this could be broken out into another function
+  // Add 1 for the slash in the URL
+  char path[
+    strlen(LIBRARIAN_URL)
+    + strlen(data_type)
+    + strlen(EXTENSION)
+    + 1];
 
+  strcpy(path, LIBRARIAN_URL);
+  strcat(path, "/");
+  strcat(path, data_type);
+  strcat(path, EXTENSION);
 
-/**
- *  do something with the data that comes back from the server
- */
-size_t do_stuff( char *ptr, size_t size, size_t nmemb, void *userdata)
-{
-  //return fwrite(ptr, size, nmemb, userdata);
+  printf("querying path: %s\n", path);
+  query_server(path);
+
+  // initialize curl here
+  // set the appropriate callback depending on what we're querying
 }
 
 
 /**
  *  basic query function
  */
-void query_server(void)
+void query_server(char *path)
 {
   CURL *curl;
   CURLcode res;
 
   curl = curl_easy_init();
   if (curl) {
-    curl_easy_setopt(curl, CURLOPT_URL, LIBRARIAN_URL);
+    curl_easy_setopt(curl, CURLOPT_URL, path);
 
     // silence curl
     curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1);
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, do_stuff);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, process_results);
 
     res = curl_easy_perform(curl);
-    printf("aaahhhh");
 
     curl_easy_cleanup(curl);
   }
 }
+
+
+/**
+ *  do something with the data that comes back from the server
+ */
+size_t process_results( char *ptr, size_t size, size_t nmemb, void *userdata)
+{
+  return fwrite(ptr, size, nmemb, userdata);
+}
+
