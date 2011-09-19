@@ -8,7 +8,7 @@ An ncurses interface for Librarian. Because I'm _that_ elite.
 * allows editing of the book
 * allows CRUD operations on a book
 
-'''
+```
 +---------------------+------------------------------------------+
 | Books               |  Details                                 |
 +---------------------+------------------------------------------+
@@ -23,7 +23,7 @@ An ncurses interface for Librarian. Because I'm _that_ elite.
 |                     | Bookshelf: Study - west wall             |
 |                     | Checked out: no                          |
 +---------------------+------------------------------------------+
-'''
+```
 
 
 
