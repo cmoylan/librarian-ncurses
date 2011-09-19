@@ -14,23 +14,13 @@ char *choices[] = {
 void func(char *name);
 
 
-int window_initialize(void)
+void window_menu(void)
 {
   ITEM **my_items;
   int c;
   MENU *my_menu;
   int n_choices, i;
   ITEM *cur_item;
-
-  // Initialize curses
-  initscr();
-  start_color();
-  cbreak(); // line buffering disabled
-  noecho(); // don't echo to stdscr
-  keypad(stdscr, TRUE); // get Fx and arrow keys
-  init_pair(1, COLOR_RED, COLOR_BLACK);
-  init_pair(2, COLOR_GREEN, COLOR_BLACK);
-  init_pair(3, COLOR_MAGENTA, COLOR_BLACK);
 
   // Initialize items
   n_choices = ARRAY_SIZE(choices);
@@ -48,6 +38,7 @@ int window_initialize(void)
   // Post the menu
   mvprintw(LINES - 3, 0, "Press <ENTER> to see the option selected");
   mvprintw(LINES - 2, 0, "Up and Down arrow keys to navigate");
+  mvprintw(LINES - 4, 0, "LINES: %d", LINES);
   post_menu(my_menu);
   refresh();
 
@@ -80,21 +71,74 @@ int window_initialize(void)
     free_item(my_items[i]);
   }
   free_menu(my_menu);
-  endwin();
+}
 
-  return 0;
+/**
+ *  Initialization function for the books pane
+ */
+void window_books_initialize(void)
+{
+  WINDOW *browser, *details, *status_line;
+  char ch;
+
+  browser = newwin(LINES-2, COLS/3, 0, 0);
+  //box(browser, 0, 0);
+  wprintw(browser, "This is teh browser");
+  wrefresh(browser);
+
+  details = newwin(LINES-2, (COLS/3)*2, 0, COLS/3);
+  //box(details, 0, 0);
+  wprintw(details, "These are the details");
+  wrefresh(details);
+
+  while((ch = getch()) != KEY_F(1)) {
+    switch(ch) {
+      case KEY_LEFT:
+        wprintw(details, "Booh yah");
+        wrefresh(details);
+        break;
+    }
+  }
+}
+
+
+void window_initialize(void)
+{
+  // Initialize curses
+  initscr();
+  start_color();
+  cbreak(); // line buffering disabled
+  noecho(); // don't echo to stdscr
+  keypad(stdscr, TRUE); // get Fx and arrow keys
+
+  // Initialize the colors
+  init_pair(1, COLOR_RED, COLOR_BLACK);
+  init_pair(2, COLOR_GREEN, COLOR_BLACK);
+  init_pair(3, COLOR_MAGENTA, COLOR_BLACK);
+
+  endwin();
 }
 
 
 void func(char *name)
 {
-  move(20, 0);
+  move(40, 0);
   clrtoeol();
-  mvprintw(20, 0, "Item selected is %s", name);
+  mvprintw(40, 0, "Item selected is %s", name);
 }
 
 
 void window_main(void)
 {
+  char ch;
+
   window_initialize();
+  window_books_initialize();
+  //window_menu();
+
+  //printw("BLAH");
+  //refresh();
+  //while((ch = getch()) != KEY_F(1)) {
+
+  //}
 }
