@@ -6,7 +6,7 @@ char *LIBRARIAN_URL = "http://localhost:8080";
 char *EXTENSION = ".xml";
 
 void query_server(char *path);
-size_t process_results( char *ptr, size_t size, size_t nmemb, void *userdata)
+size_t process_results( char *ptr, size_t size, size_t nmemb, void *userdata);
 
 
 // TODO:
@@ -17,6 +17,7 @@ size_t process_results( char *ptr, size_t size, size_t nmemb, void *userdata)
 void fetch(char *data_type)
 {
   // TODO: this could be broken out into another function
+  // TODO: could also use sprintf
   // Add 1 for the slash in the URL
   char path[
     strlen(LIBRARIAN_URL)
@@ -32,8 +33,8 @@ void fetch(char *data_type)
   printf("querying path: %s\n", path);
   query_server(path);
 
-  // initialize curl here
-  // set the appropriate callback depending on what we're querying
+  // TODO: initialize curl here
+  // TODO: set the appropriate callback depending on what we're querying
 }
 
 

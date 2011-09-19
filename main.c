@@ -9,8 +9,11 @@
  */
 int main(int argc, char *argv[])
 {
-  //query_server();
-  fetch("books");
+  //fetch("books");
+  window_main();
+
+  // TODO: giant case statement to parse command line options
+  // TODO: break initialization functions out
 
   return 0;
 }

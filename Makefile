@@ -1,8 +1,8 @@
-CFLAGS = -lncurses
+CFLAGS = -lncurses -lmenu
 
 # Libraries
 # TODO: curl-config --libs and curl-config --cflags
-LDFLAGS = -L/usr/lib/i386-linux-gnu
+#LDFLAGS = -L/usr/lib/i386-linux-gnu
 LDLIBS = -lcurl
 
 # stuff i'll probably need later
