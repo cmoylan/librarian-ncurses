@@ -73,34 +73,6 @@ void window_menu(void)
   free_menu(my_menu);
 }
 
-/**
- *  Initialization function for the books pane
- */
-void window_books_initialize(void)
-{
-  WINDOW *browser, *details, *status_line;
-  char ch;
-
-  browser = newwin(LINES-2, COLS/3, 0, 0);
-  //box(browser, 0, 0);
-  wprintw(browser, "This is teh browser");
-  wrefresh(browser);
-
-  details = newwin(LINES-2, (COLS/3)*2, 0, COLS/3);
-  //box(details, 0, 0);
-  wprintw(details, "These are the details");
-  wrefresh(details);
-
-  while((ch = getch()) != KEY_F(1)) {
-    switch(ch) {
-      case KEY_LEFT:
-        wprintw(details, "Booh yah");
-        wrefresh(details);
-        break;
-    }
-  }
-}
-
 
 void window_initialize(void)
 {
@@ -116,7 +88,7 @@ void window_initialize(void)
   init_pair(2, COLOR_GREEN, COLOR_BLACK);
   init_pair(3, COLOR_MAGENTA, COLOR_BLACK);
 
-  endwin();
+  //endwin();
 }
 
 
@@ -130,15 +102,50 @@ void func(char *name)
 
 void window_main(void)
 {
+  WINDOW *browser, *details, *status_line;
   char ch;
 
-  window_initialize();
-  window_books_initialize();
-  //window_menu();
+  // TODO: move init functions into window_init
+  initscr();
+  cbreak();
+  keypad(stdscr, TRUE);
 
-  //printw("BLAH");
-  //refresh();
-  //while((ch = getch()) != KEY_F(1)) {
+  mvprintw(LINES-1, 0, "Press F1 to exit");
+  refresh();
 
-  //}
+  // Create the windows
+  browser = newwin(LINES-2, COLS/3, 0, 0);
+  box(browser, 0, 0);
+  mvwprintw(browser, 3, 2, "This is teh browser");
+  wrefresh(browser);
+
+  details = newwin(LINES-2, (COLS/3)*2, 0, COLS/3);
+  box(details, 0, 0);
+  mvwprintw(details, 3, 2, "These are the details");
+  wrefresh(details);
+
+
+
+  // TODO: move main getch loop into its own function
+  while((ch = getch()) != KEY_F(1)) {
+    switch(ch) {
+      case KEY_LEFT:
+        mvwaddstr(details, 5, 2, "Booh yah");
+        wrefresh(details);
+        break;
+      case KEY_UP:
+        printw("blahhhh");
+        refresh();
+        break;
+      case 10:
+        wborder(details, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
+        werase(details);
+        wrefresh(details);
+        delwin(details);
+        break;
+    }
+  }
+
+  // TODO: move cleanup functions into their own function
+  endwin();
 }
