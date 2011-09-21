@@ -12,6 +12,9 @@ char *choices[] = {
   "Exit",
 };
 void func(char *name);
+// Function pointer to whichever function should handle getch() at any
+// given moment.
+void *(*GETCH_CALLBACK)(void);
 
 
 void window_menu(void)
@@ -36,9 +39,9 @@ void window_menu(void)
   my_menu = new_menu((ITEM **)my_items);
 
   // Post the menu
-  mvprintw(LINES - 3, 0, "Press <ENTER> to see the option selected");
-  mvprintw(LINES - 2, 0, "Up and Down arrow keys to navigate");
-  mvprintw(LINES - 4, 0, "LINES: %d", LINES);
+  //mvprintw(LINES - 3, 0, "Press <ENTER> to see the option selected");
+  //mvprintw(LINES - 2, 0, "Up and Down arrow keys to navigate");
+  //mvprintw(LINES - 4, 0, "LINES: %d", LINES);
   post_menu(my_menu);
   refresh();
 
@@ -84,11 +87,47 @@ void window_initialize(void)
   keypad(stdscr, TRUE); // get Fx and arrow keys
 
   // Initialize the colors
-  init_pair(1, COLOR_RED, COLOR_BLACK);
-  init_pair(2, COLOR_GREEN, COLOR_BLACK);
-  init_pair(3, COLOR_MAGENTA, COLOR_BLACK);
+  //init_pair(1, COLOR_RED, COLOR_BLACK);
+  //init_pair(2, COLOR_GREEN, COLOR_BLACK);
+  //init_pair(3, COLOR_MAGENTA, COLOR_BLACK);
+}
 
-  //endwin();
+void books_callback2(void) {printw("it works!"); }
+void books_callback(void)
+{
+  printw("books callback");
+  // Change the callback on the fly
+  GETCH_CALLBACK = &books_callback2;
+}
+
+
+void window_books(void)
+{
+  WINDOW *browser, *details, *status_line;
+
+  mvprintw(LINES-1, 0, "Press F1 to exit");
+  refresh();
+
+  // Create the windows
+  browser = newwin(LINES-2, COLS/3, 0, 0);
+  box(browser, 0, 0);
+  mvwprintw(browser, 0, 2, "[This is teh browser]");
+  wrefresh(browser);
+
+  details = newwin(LINES-2, (COLS/3)*2, 0, COLS/3);
+  //box(details, 0, 0);
+  mvwprintw(details, 0, 2, "These are the details");
+  wrefresh(details);
+
+  // Set the main loop callback for this pane
+  GETCH_CALLBACK = &books_callback;
+}
+
+
+void window_books_keypress(int key)
+{
+  printw("pressed key was: %d", key);
+  refresh();
 }
 
 
@@ -102,50 +141,36 @@ void func(char *name)
 
 void window_main(void)
 {
-  WINDOW *browser, *details, *status_line;
-  char ch;
+  int key;
 
-  // TODO: move init functions into window_init
-  initscr();
-  cbreak();
-  keypad(stdscr, TRUE);
+  window_initialize();
+  window_books();  // or whatever default pane is
 
-  mvprintw(LINES-1, 0, "Press F1 to exit");
-  refresh();
-
-  // Create the windows
-  browser = newwin(LINES-2, COLS/3, 0, 0);
-  box(browser, 0, 0);
-  mvwprintw(browser, 3, 2, "This is teh browser");
-  wrefresh(browser);
-
-  details = newwin(LINES-2, (COLS/3)*2, 0, COLS/3);
-  box(details, 0, 0);
-  mvwprintw(details, 3, 2, "These are the details");
-  wrefresh(details);
-
-
-
-  // TODO: move main getch loop into its own function
-  while((ch = getch()) != KEY_F(1)) {
-    switch(ch) {
-      case KEY_LEFT:
-        mvwaddstr(details, 5, 2, "Booh yah");
-        wrefresh(details);
-        break;
-      case KEY_UP:
-        printw("blahhhh");
-        refresh();
-        break;
-      case 10:
-        wborder(details, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
-        werase(details);
-        wrefresh(details);
-        delwin(details);
-        break;
-    }
+  // For more control, change this line to:
+  // while(PROGRAM_RUNNING)
+  // where PROGRAM_RUNNING is a global that you can toggle anywhere
+  while((key = getch()) != KEY_F(1)) {
+    GETCH_CALLBACK();
+    //window_books_keypress(key);
+    // pointer to appropriate keypress handling function
+    //switch(ch) {
+    //  case 9:
+    //    mvwaddstr(details, 5, 1, "Booh yah");
+    //    wrefresh(details);
+    //    break;
+    //  case KEY_UP:
+    //    printw("blahhhh");
+    //    refresh();
+    //    break;
+    //  case 32:
+    //    wborder(details, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
+    //    werase(details);
+    //    wrefresh(details);
+    //    delwin(details);
+    //    break;
+    // }
   }
 
-  // TODO: move cleanup functions into their own function
+  // Cleanup functions
   endwin();
 }

@@ -12,7 +12,7 @@ LDLIBS = -lcurl
 FILES = main
 
 
-all: $(FILES)
+all: clean $(FILES)
 
 clean:
 	rm -rf ./main
