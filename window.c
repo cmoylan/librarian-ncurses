@@ -14,7 +14,13 @@ char *choices[] = {
 void func(char *name);
 // Function pointer to whichever function should handle getch() at any
 // given moment.
-void *(*GETCH_CALLBACK)(void);
+void *(*GETCH_CALLBACK)(int key);
+typedef struct _BookWindow_struct {
+  WINDOW *browser;
+  WINDOW *details;
+  WINDOW *status_line;
+} BookWindow;
+BookWindow BOOK;
 
 
 void window_menu(void)
@@ -92,27 +98,41 @@ void window_initialize(void)
   //init_pair(3, COLOR_MAGENTA, COLOR_BLACK);
 }
 
-void books_callback2(void) {printw("it works!"); }
-void books_callback(void)
+
+void books_callback(int key)
 {
-  printw("books callback");
-  // Change the callback on the fly
-  GETCH_CALLBACK = &books_callback2;
+  switch(key) {
+    case 9:
+      mvwaddstr(BOOK.browser, 5, 1, "Booh yah");
+      wrefresh(BOOK.browser);
+      break;
+    case KEY_UP:
+      //printw("blahhhh");
+      //refresh();
+      break;
+    case 32:
+      //wborder(details, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
+      //werase(details);
+      //wrefresh(details);
+      //delwin(details);
+      break;
+   }
 }
 
 
 void window_books(void)
 {
-  WINDOW *browser, *details, *status_line;
+  WINDOW *details, *status_line;
+  //BOOKS book;
 
   mvprintw(LINES-1, 0, "Press F1 to exit");
   refresh();
 
   // Create the windows
-  browser = newwin(LINES-2, COLS/3, 0, 0);
-  box(browser, 0, 0);
-  mvwprintw(browser, 0, 2, "[This is teh browser]");
-  wrefresh(browser);
+  BOOK.browser = newwin(LINES-2, COLS/3, 0, 0);
+  box(BOOK.browser, 0, 0);
+  mvwprintw(BOOK.browser, 0, 2, "[This is teh browser]");
+  wrefresh(BOOK.browser);
 
   details = newwin(LINES-2, (COLS/3)*2, 0, COLS/3);
   //box(details, 0, 0);
@@ -149,26 +169,8 @@ void window_main(void)
   // For more control, change this line to:
   // while(PROGRAM_RUNNING)
   // where PROGRAM_RUNNING is a global that you can toggle anywhere
-  while((key = getch()) != KEY_F(1)) {
-    GETCH_CALLBACK();
-    //window_books_keypress(key);
-    // pointer to appropriate keypress handling function
-    //switch(ch) {
-    //  case 9:
-    //    mvwaddstr(details, 5, 1, "Booh yah");
-    //    wrefresh(details);
-    //    break;
-    //  case KEY_UP:
-    //    printw("blahhhh");
-    //    refresh();
-    //    break;
-    //  case 32:
-    //    wborder(details, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
-    //    werase(details);
-    //    wrefresh(details);
-    //    delwin(details);
-    //    break;
-    // }
+  while(key = getch()) {
+    GETCH_CALLBACK(key);
   }
 
   // Cleanup functions

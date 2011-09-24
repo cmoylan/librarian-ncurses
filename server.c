@@ -4,19 +4,15 @@
 
 char *LIBRARIAN_URL = "http://localhost:8080";
 char *EXTENSION = ".xml";
+char *DATA_DIR;
 
 void query_server(char *path);
 size_t process_results( char *ptr, size_t size, size_t nmemb, void *userdata);
 
 
-// TODO:
-//
-//
-
 
 void fetch(char *data_type)
 {
-  // TODO: this could be broken out into another function
   // TODO: could also use sprintf
   // Add 1 for the slash in the URL
   char path[
