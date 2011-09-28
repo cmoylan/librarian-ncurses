@@ -9,7 +9,7 @@ char *LIBRARIAN_URL = "http://localhost:8080";
 char *EXTENSION = ".xml";
 char *DATA_DIR;
 
-void query_server(char *path);
+void query_server(char *path, size_t (*callback));
 size_t process_results( char *ptr, size_t size, size_t nmemb, void *userdata);
 
 
@@ -30,9 +30,8 @@ void fetch(char *data_type)
   strcat(path, EXTENSION);
 
   printf("querying path: %s\n", path);
-  query_server(path);
+  query_server(path, process_results);
 
-  // TODO: initialize curl here
   // TODO: set the appropriate callback depending on what we're querying
 }
 
@@ -40,7 +39,7 @@ void fetch(char *data_type)
 /**
  *  basic query function
  */
-void query_server(char *path)
+void query_server(char *path, size_t (*callback))
 {
   CURL *curl;
   CURLcode res;
@@ -51,7 +50,7 @@ void query_server(char *path)
 
     // silence curl
     curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1);
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, process_results);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callback);
 
     res = curl_easy_perform(curl);
 
@@ -61,10 +60,25 @@ void query_server(char *path)
 
 
 /**
- *  do something with the data that comes back from the server
+ *  Write the xml data to a cachefile
  */
 size_t process_results( char *ptr, size_t size, size_t nmemb, void *userdata)
 {
-  //return fwrite(ptr, size, nmemb, userdata);
+  char *filename = "books.cache";
+  char path[
+    strlen(CONFIG_DIR)
+    + strlen(filename)
+    + 1];  // add 1 for slash
+  FILE *file;
+
+  sprintf(path, "%s/%s", CONFIG_DIR, filename);
+  //printf("path in proc res is %s\n", path);
+
+  file = fopen(path, "w");
+
+  if (file != NULL) {
+    fwrite(ptr, size, nmemb, file);
+    fclose(file);
+  }
 }
 

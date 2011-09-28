@@ -43,7 +43,7 @@ void create_or_open_config_dir(void)
 }
 
 
-//void config_initialize(void)
-//{
-//  create_or_open_config_dir();
-//}
+void config_initialize(void)
+{
+  create_or_open_config_dir();
+}

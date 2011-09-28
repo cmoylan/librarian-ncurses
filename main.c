@@ -13,7 +13,7 @@
  */
 int main(int argc, char *argv[])
 {
-  create_or_open_config_dir();
+  config_initialize();
   fetch("books");
   //window_main();
 
