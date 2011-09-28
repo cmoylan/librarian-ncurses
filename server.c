@@ -1,5 +1,8 @@
+#include "globals.h"
+
 #include <string.h>
 #include <curl/curl.h>
+
 
 
 char *LIBRARIAN_URL = "http://localhost:8080";
@@ -62,6 +65,6 @@ void query_server(char *path)
  */
 size_t process_results( char *ptr, size_t size, size_t nmemb, void *userdata)
 {
-  return fwrite(ptr, size, nmemb, userdata);
+  //return fwrite(ptr, size, nmemb, userdata);
 }
 

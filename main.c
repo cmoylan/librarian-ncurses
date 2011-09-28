@@ -1,22 +1,23 @@
-#include <stdio.h>
 #include "config.c"
+#include "globals.h"
 #include "server.c"
 #include "window.c"
 
+#include <stdio.h>
 
 
-/** main
+/**
+ *  Main program that accepts and handles command line arguments
  *
- *  It all starts here.
+ *  @return 0 if successful
  */
 int main(int argc, char *argv[])
 {
-  config_initialize();
-  //fetch("books");
+  create_or_open_config_dir();
+  fetch("books");
   //window_main();
 
   // TODO: giant case statement to parse command line options
-  // TODO: break initialization functions out
 
   return 0;
 }

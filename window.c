@@ -1,3 +1,5 @@
+#include "globals.h"
+
 #include <ncurses.h>
 #include <menu.h>
 
@@ -11,6 +13,7 @@ char *choices[] = {
   "Choice 4",
   "Exit",
 };
+
 void func(char *name);
 // Function pointer to whichever function should handle getch() at any
 // given moment.

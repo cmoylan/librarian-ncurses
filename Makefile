@@ -20,6 +20,9 @@ clean:
 check:
 	valgrind ./$(FILES)
 
+pre:
+	gcc -E $(FILES) > main.out
+
 
 # Always use the 'clean' target defined in this file.
 .PHONY: clean
