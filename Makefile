@@ -1,9 +1,9 @@
-CFLAGS = -lncurses -lmenu
+CFLAGS = -lncurses -lmenu -I/usr/include/libxml2
 
 # Libraries
 # TODO: curl-config --libs and curl-config --cflags
 #LDFLAGS = -L/usr/lib/i386-linux-gnu
-LDLIBS = -lcurl
+LDLIBS = -lcurl -lxml2
 
 # stuff i'll probably need later
 # INCLUDE = ...

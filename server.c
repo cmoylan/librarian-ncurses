@@ -30,6 +30,7 @@ void fetch(char *data_type)
   strcat(path, EXTENSION);
 
   printf("querying path: %s\n", path);
+  // TODO: clear the .cache file here
   query_server(path, process_results);
 
   // TODO: set the appropriate callback depending on what we're querying
@@ -70,15 +71,19 @@ size_t process_results( char *ptr, size_t size, size_t nmemb, void *userdata)
     + strlen(filename)
     + 1];  // add 1 for slash
   FILE *file;
+  int write_size;
 
   sprintf(path, "%s/%s", CONFIG_DIR, filename);
   //printf("path in proc res is %s\n", path);
 
-  file = fopen(path, "w");
+  file = fopen(path, "a");
+  clearerr(file);
 
   if (file != NULL) {
-    fwrite(ptr, size, nmemb, file);
+    write_size = fwrite(ptr, size, nmemb, file);
     fclose(file);
   }
+
+  return write_size;
 }
 
