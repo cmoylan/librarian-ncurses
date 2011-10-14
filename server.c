@@ -37,14 +37,11 @@ void fetch(char *data_type)
 
   create_cache_file_paths();
 
-  printf("fuuuuck");
   printf("querying path: %s\n", path);
   // Clear the .cache files
-  printf("blah");
-  printf("books cache in here is %s", BOOKS_CACHE);
-  file = fopen(BOOKS_CACHE, "w");
-  fclose(file);
-  query_server(path, process_results);
+  //file = fopen(BOOKS_CACHE, "w");
+  //fclose(file);
+  //query_server(path, process_results);
 
   // TODO: set the appropriate callback depending on what we're querying
 }
