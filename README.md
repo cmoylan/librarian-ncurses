@@ -1,5 +1,5 @@
 # Librarian-curses #
-An ncurses interface for Librarian. Because I'm _that_ elite.
+An ncurses interface for Librarian. Because I'm _that_ 1337.
 
 ## Panes ##
 ### Books  ###
